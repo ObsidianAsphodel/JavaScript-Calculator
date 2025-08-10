@@ -2,24 +2,22 @@ let currentInput = '';
 let currentOperation = '';
 let previousInput = '';
 
-function InputToConsole () {
-    let inputValue = parseInt(document.getElementById("inputField").value);
-    JSON.stringify(inputValue);
-    console.log(inputValue);
-}
-function clearDisplay(){
-    currentInput = '';
-    previousInput = '';
-    currentOperation = '';
-    document.getElementById("display").value = "";
-}
 function appendNumber(number){
     currentInput += number;
-    document.getElementById("display").value = `${previousInput} ${currentOperation}`;
+    document.getElementById("display").value = `${previousInput} ${currentOperation} ${currentInput}`;
 }
 function appendOperation(operator){
-    console.log(operator);
-    document.getElementById("display").value += operator;
+    if (currentInput === '') return;
+      if (previousInput !== ''){
+        calculate();
+    }
+    currentOperation = operator;
+
+    previousInput = currentInput;
+
+    currentInput = '';
+
+    document.getElementById("display").value = `${previousInput} ${currentOperation}`;
 }
 function calculate(){
     if (previousInput === '' || currentInput === '') return;
@@ -28,10 +26,34 @@ function calculate(){
     let current = parseFloat(currentInput);
 
     switch (currentOperation) {
+        case '*':
+            result = prev * current;
+            break;
+        case '/':
+            if (current === 0){
+                console.log("Cannot Divide By Zero");
+                return;
+            }
+            result = prev / current;
+            break;
         case '+':
             result = prev + current;
+            break;
+        case '-':
+            result = prev - current;
+            break;
+        default:
+            return;
     }
+
+    currentInput = result.toString();
+    currentOperation = '';
+    previousInput = '';
+    document.getElementById("display").value = currentInput;
 }
-function KeyInput(){
-    console.log(KeyboardEvent.KeyInput());
+function clearDisplay(){
+    currentInput = '';
+    previousInput = '';
+    currentOperation = '';
+    document.getElementById("display").value = "";
 }
